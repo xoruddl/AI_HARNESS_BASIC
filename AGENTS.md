@@ -6,6 +6,7 @@
 
 | 문서 | 읽는 시점 |
 | --- | --- |
+| [docs/project-direction.md](docs/project-direction.md) | 모든 작업 시작 전 (필수). 범위 밖 작업이면 먼저 질문 |
 | [docs/workflow.md](docs/workflow.md) | 모든 작업 시작 전 (필수) |
 | [docs/branch-strategy.md](docs/branch-strategy.md) | 브랜치 생성·병합 |
 | [docs/commit-convention.md](docs/commit-convention.md) | 커밋 |
