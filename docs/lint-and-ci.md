@@ -49,9 +49,9 @@ spotless {
 
 | job | 실행 | 검사 |
 | --- | --- | --- |
-| `commit-rules` | PR | 커밋별 변경 파일 수 ≤ 3, 커밋 메시지 형식 |
 | `build` | PR, main push | `spotlessCheck build`. `gradlew` 없으면 건너뜀 |
 
+- 커밋 규칙(파일 수, 메시지 형식)은 CI 에서 검사하지 않는다. 로컬 훅만 검사한다.
 - 버전을 올릴 때는 이 문서의 스니펫과 CI 를 같이 고친다.
 
 ## 에이전트 설정
