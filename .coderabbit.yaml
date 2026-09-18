@@ -1,0 +1,16 @@
+# CodeRabbit 설정. 리뷰 반영 판단 기준은 docs/code-review.md
+language: ko-KR
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "**/*.java"
+      instructions: "docs/clean-code.md, docs/code-style.md 기준으로 리뷰한다."
+    - path: "**/*.md"
+      instructions: "docs/writing-style.md 기준. 서술형·장황한 문장을 지적한다."

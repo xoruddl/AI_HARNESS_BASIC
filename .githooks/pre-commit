@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# 커밋 단위를 작게 유지하기 위한 pre-commit 훅.
+#   1. 스테이징된 파일 수가 HARNESS_MAX_FILES(기본 1)를 넘으면 커밋을 막는다.
+#   2. gradlew 가 있고 Java 파일이 스테이징됐으면 spotlessCheck 를 돌린다.
+#
+# 빌드가 깨져서 묶어야 할 때만 한도를 올린다: HARNESS_MAX_FILES=2 git commit ...
+# 규칙: docs/workflow.md, docs/lint-and-ci.md
+
+set -euo pipefail
+
+max_files="${HARNESS_MAX_FILES:-1}"
+
+# 병합 충돌 해결 커밋은 여러 파일이 섞일 수밖에 없으므로 검사하지 않는다.
+if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+  exit 0
+fi
+
+if ! [[ "$max_files" =~ ^[0-9]+$ ]] || [ "$max_files" -lt 1 ]; then
+  echo "pre-commit: HARNESS_MAX_FILES 는 1 이상의 정수여야 합니다. (현재: $max_files)" >&2
+  exit 1
+fi
+
+# -M: 파일 이동(rename)은 삭제+추가 두 개가 아니라 하나로 센다.
+staged="$(git diff --cached --name-only -M)"
+count="$(printf '%s' "$staged" | grep -c . || true)"
+
+if [ "$count" -gt "$max_files" ]; then
+  echo "pre-commit: 스테이징된 파일 ${count}개 (한도 ${max_files}개)" >&2
+  printf '%s\n' "$staged" | sed 's/^/  - /' >&2
+  echo "" >&2
+  echo "  파일 하나만 남기고 나머지는 unstage 하세요: git restore --staged <file>" >&2
+  echo "  빌드가 깨져 묶어야 한다면: HARNESS_MAX_FILES=${count} git commit ..." >&2
+  exit 1
+fi
+
+# 포맷 검사는 Gradle 프로젝트가 붙어 있을 때만 한다.
+if [ -x ./gradlew ] && printf '%s\n' "$staged" | grep -q '\.java$'; then
+  if ! ./gradlew -q spotlessCheck; then
+    echo "pre-commit: 포맷 위반. ./gradlew spotlessApply 후 다시 스테이징하세요." >&2
+    exit 1
+  fi
+fi
+
+exit 0

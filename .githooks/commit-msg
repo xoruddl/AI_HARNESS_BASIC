@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# 커밋 메시지 검사 훅. CI(.github/workflows/ci.yml)에서도 같은 스크립트를 재사용한다.
+#   - 형식: <type>(<scope>): <제목>
+#   - 제목 50자 이내, 마침표로 끝나지 않음
+#   - AI 서명 금지
+#
+# 사용: .githooks/commit-msg <메시지 파일>
+# 규칙: docs/commit-convention.md
+
+set -euo pipefail
+
+msg_file="$1"
+
+# 한글 제목 길이를 바이트가 아니라 글자 수로 세기 위해 UTF-8 로케일을 쓴다.
+# macOS 는 C.UTF-8, Ubuntu 는 C.utf8 로 표기가 달라서 실제 목록에서 찾는다.
+utf8_locale="$(locale -a 2>/dev/null | grep -iE '^(c|en_us)\.utf-?8$' | head -n 1 || true)"
+if [ -n "$utf8_locale" ]; then
+  export LC_ALL="$utf8_locale"
+fi
+
+# git 이 넣는 주석(#) 줄은 실제 메시지가 아니므로 제외한다.
+message="$(grep -v '^#' "$msg_file" || true)"
+subject="$(printf '%s\n' "$message" | head -n 1)"
+
+fail() {
+  echo "commit-msg: $1" >&2
+  echo "  제목: $subject" >&2
+  echo "  규칙: docs/commit-convention.md" >&2
+  exit 1
+}
+
+# git 이 자동 생성하는 메시지는 형식 검사 대상이 아니다.
+if [[ "$subject" =~ ^(Merge|Revert|fixup!|squash!|amend!) ]]; then
+  exit 0
+fi
+
+types='feat|fix|refactor|test|docs|style|build|ci|chore'
+pattern="^(${types})(\([a-z0-9._-]+\))?: .+"
+
+if ! [[ "$subject" =~ $pattern ]]; then
+  fail "형식이 '<type>(<scope>): <제목>' 이 아닙니다. type: ${types//|/, }"
+fi
+
+if [ "${#subject}" -gt 50 ]; then
+  fail "제목이 50자를 넘습니다. (${#subject}자)"
+fi
+
+if [[ "$subject" == *. ]]; then
+  fail "제목을 마침표로 끝내지 않습니다."
+fi
+
+# 사람이 쓴 커밋처럼 보이도록 AI 도구 서명을 막는다. (docs/writing-style.md)
+if printf '%s\n' "$message" | grep -qiE 'co-authored-by:.*(claude|anthropic)|generated with.*claude|🤖'; then
+  fail "AI 서명이 포함돼 있습니다. 해당 줄을 지우세요."
+fi
+
+exit 0
