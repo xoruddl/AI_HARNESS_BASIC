@@ -44,4 +44,5 @@ git config core.hooksPath .githooks
 1. `AGENTS.md`, `CLAUDE.md`, `docs/`, `.githooks/`, `.github/`, `.claude/`, `.coderabbit.yaml` 을 복사한다.
 2. 훅을 설치한다.
 3. 도입 커밋만 한도를 올려 한 번에 커밋한다: `HARNESS_MAX_FILES=99 git commit ...`
-4. Gradle 프로젝트면 [docs/lint-and-ci.md](docs/lint-and-ci.md) 의 Spotless 설정을 추가한다.
+4. [docs/project-direction.md](docs/project-direction.md) 에 프로젝트 목표·범위를 채운다.
+5. Gradle 프로젝트면 [docs/lint-and-ci.md](docs/lint-and-ci.md) 의 Spotless 설정을 추가한다.
