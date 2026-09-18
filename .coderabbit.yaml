@@ -11,6 +11,6 @@ reviews:
     drafts: false
   path_instructions:
     - path: "**/*.java"
-      instructions: "docs/clean-code.md, docs/code-style.md 기준으로 리뷰한다."
+      instructions: "docs/clean-code.md, docs/code-style.md, docs/java-checklist.md 기준으로 리뷰한다. 겹치면 docs/java-checklist.md 가 우선한다."
     - path: "**/*.md"
       instructions: "docs/writing-style.md 기준. 서술형·장황한 문장을 지적한다."

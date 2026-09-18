@@ -1,6 +1,7 @@
 # 클린 코드 + SOLID
 
 코드 작성·리뷰 시 체크리스트. 예시는 [clean-code-examples.md](clean-code-examples.md).
+Java 는 [java-checklist.md](java-checklist.md) 를 함께 본다. 겹치면 그쪽이 우선한다.
 
 ## 함수
 

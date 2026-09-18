@@ -14,6 +14,7 @@
 | [docs/code-style.md](docs/code-style.md) | 코드 작성, 주석 |
 | [docs/clean-code.md](docs/clean-code.md) | 코드 작성, 설계 |
 | [docs/clean-code-examples.md](docs/clean-code-examples.md) | 코드 작성 시 참고 예시 |
+| [docs/java-checklist.md](docs/java-checklist.md) | Java 코드 작성·리뷰 |
 | [docs/lint-and-ci.md](docs/lint-and-ci.md) | 훅·린트·CI 설정 |
 | [docs/writing-style.md](docs/writing-style.md) | md 문서, 커밋·PR 메시지 작성 |
 
