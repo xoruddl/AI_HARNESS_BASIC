@@ -24,7 +24,7 @@ AI 코딩 에이전트(Claude Code 등)가 작은 커밋 단위로 작업하도�
 | [CLAUDE.md](CLAUDE.md) | Claude Code 용. `AGENTS.md` 를 불러온다 |
 | [docs/](docs/) | 작업 흐름, 브랜치·커밋·PR 규칙, 코드 스타일, 문체 |
 | [.githooks/](.githooks/) | `pre-commit`(커밋당 파일 수), `commit-msg`(메시지 형식) |
-| [.github/workflows/ci.yml](.github/workflows/ci.yml) | PR 커밋 규칙 검사, Gradle 빌드 |
+| [.github/workflows/ci.yml](.github/workflows/ci.yml) | Gradle 빌드 |
 | [.claude/settings.json](.claude/settings.json) | AI 서명 비활성화, 훅 우회·force push 차단 |
 | [.coderabbit.yaml](.coderabbit.yaml) | CodeRabbit 리뷰 설정 |
 

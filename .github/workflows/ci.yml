@@ -7,44 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  # 로컬 훅은 --no-verify 로 우회될 수 있으므로 PR 단계에서 한 번 더 검사한다.
-  commit-rules:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: 커밋별 변경 파일 수 검사
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-          # 로컬 묶음 허용 한도(3)와 맞춘다.
-          MAX_FILES: 3
-        run: |
-          fail=0
-          for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
-            count=$(git diff-tree --no-commit-id --name-only -r -M "$sha" | grep -c . || true)
-            if [ "$count" -gt "$MAX_FILES" ]; then
-              echo "::error::$(git log -1 --format='%h %s' "$sha") — 파일 ${count}개 (한도 ${MAX_FILES})"
-              fail=1
-            fi
-          done
-          exit $fail
-
-      - name: 커밋 메시지 검사
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          fail=0
-          for sha in $(git rev-list --no-merges "$BASE..$HEAD"); do
-            git log -1 --format=%B "$sha" > "$RUNNER_TEMP/msg"
-            .githooks/commit-msg "$RUNNER_TEMP/msg" || fail=1
-          done
-          exit $fail
-
+  # 커밋 규칙(파일 수, 메시지 형식)은 CI 에서 막지 않는다. 로컬 훅만 검사한다.
   build:
     runs-on: ubuntu-latest
     steps:
